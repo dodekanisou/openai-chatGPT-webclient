@@ -55,12 +55,3 @@ def test_reset_prompts():
     reset_prompts = chat_gpt.reset_prompts(context)
 
     assert reset_prompts == [{"role": "system", "content": context}]
-
-
-def test_reset_conversation():
-    context = "Test context"
-    reset_prompts, past, generated = chat_gpt.reset_conversation(context)
-
-    assert reset_prompts == [{"role": "system", "content": context}]
-    assert past == []
-    assert generated == []

@@ -29,7 +29,3 @@ def update_prompts(prompts, role, content):
 
 def reset_prompts(context):
     return [{"role": "system", "content": context}]
-
-
-def reset_conversation(context):
-    return reset_prompts(context), [], []

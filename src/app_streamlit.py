@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# Initializes the Streamlit session state with default values for the 'prompts', 'generated', 'past'.
+# Initializes the Streamlit session state with default values for the 'prompts'.
 if "context" not in st.session_state:
     st.session_state[
         "context"
@@ -22,16 +22,13 @@ If you don't know something, you reply that you don't know."
 if "prompts" not in st.session_state:
     st.session_state["prompts"] = chat_gpt.reset_prompts(st.session_state["context"])
 
-if "generated" not in st.session_state:
-    st.session_state["generated"] = []
-
-if "past" not in st.session_state:
-    st.session_state["past"] = []
-
 
 def chat_click():
     if st.session_state["user"] != "":
         user_chat_input = st.session_state["user"]
+        st.session_state["prompts"] = chat_gpt.update_prompts(
+            st.session_state["prompts"], "user", user_chat_input
+        )
         output = chat_gpt.generate_response(
             st.session_state["prompts"],
             st.secrets["MODEL_NAME"],
@@ -39,8 +36,6 @@ def chat_click():
             st.session_state["max_tokens"],
             st.session_state["top_p"],
         )
-        st.session_state["past"].append(user_chat_input)
-        st.session_state["generated"].append(output)
         st.session_state["prompts"] = chat_gpt.update_prompts(
             st.session_state["prompts"], "assistant", output
         )
@@ -48,11 +43,7 @@ def chat_click():
 
 
 def new_topic_click():
-    (
-        st.session_state["prompts"],
-        st.session_state["past"],
-        st.session_state["generated"],
-    ) = chat_gpt.reset_conversation(st.session_state["context"])
+    st.session_state["prompts"] = chat_gpt.reset_prompts(st.session_state["context"])
     st.session_state["user"] = ""
 
 
@@ -76,16 +67,11 @@ with chatTab:
             "New Topic", on_click=new_topic_click, use_container_width=True
         )
 
-    if st.session_state["generated"]:
-        for i in range(len(st.session_state["generated"]) - 1, -1, -1):
-            message(
-                st.session_state["generated"][i],
-                avatar_style="pixel-art-neutral",
-                key=str(i),
-            )
-            message(
-                st.session_state["past"][i],
-                is_user=True,
-                avatar_style="pixel-art",
-                key=str(i) + "_user",
-            )
+    if len(st.session_state["prompts"]) > 1:
+        for i in range(len(st.session_state["prompts"]) - 1, 0, -1):
+            role = st.session_state["prompts"][i]["role"]
+            content = st.session_state["prompts"][i]["content"]
+            if role == "assistant":
+                message(content, avatar_style="pixel-art-neutral")
+            elif role == "user":
+                message(content, is_user=True, avatar_style="pixel-art")
