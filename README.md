@@ -17,7 +17,7 @@ MODEL_NAME = "gpt-4-deployment"
 
 You can store them in a file named `secret.toml` in the `.streamlit` folder and `--mount` the folder in the docker.
 
-If you want to pull the image from the [Docker Hub repository](https://hub.docker.com/u/dodekanisou/openai-chatgpt-webclient):
+If you want to pull the image from the [Docker Hub repository](https://hub.docker.com/r/dodekanisou/openai-chatgpt-webclient/tags):
 
 ```bash
 docker run -p 44333:44480 dodekanisou/openai-chatgpt-webclient:2023-05-01 --mount type=bind,source=PATH_TO_NEW_FOLDER/.streamlit,target=/app/.streamlit,bind-propagation=shared
