@@ -36,10 +36,17 @@ def chat_click():
             st.session_state["max_tokens"],
             st.session_state["top_p"],
         )
-        st.session_state["prompts"] = chat_gpt.update_prompts(
-            st.session_state["prompts"], "assistant", output
-        )
-        st.session_state["user"] = ""
+        # if chat_gpt.ERROR_PERFIX in output, we keep the prompts as is and display the error message
+        if chat_gpt.ERROR_PERFIX in output:
+            # Remove the last prompt, which is the user's input
+            st.session_state["prompts"].pop()
+            # icon avatar style and the bandaid icon
+            message(output.replace(chat_gpt.ERROR_PERFIX, ""), avatar_style="bottts", seed=1)
+        else:
+            st.session_state["prompts"] = chat_gpt.update_prompts(
+                st.session_state["prompts"], "assistant", output
+            )
+            st.session_state["user"] = ""
 
 
 def new_topic_click():

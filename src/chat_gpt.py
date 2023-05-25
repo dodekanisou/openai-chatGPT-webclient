@@ -1,5 +1,6 @@
 import openai
 
+ERROR_PERFIX = "$$ERROR$$: "
 
 def setup_openai_api(settings):
     openai.api_type = settings["API_TYPE"] if settings["API_TYPE"] else "azure"
@@ -23,7 +24,7 @@ def generate_response(prompts, model_name, temperature, max_tokens, top_p):
         message = completion.choices[0].message.content
         return message
     except Exception as error:
-        return str(error)
+        return ERROR_PERFIX.join(str(error))
 
 
 def update_prompts(prompts, role, content):
