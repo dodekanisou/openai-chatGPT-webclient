@@ -11,15 +11,19 @@ def setup_openai_api(settings):
 
 
 def generate_response(prompts, model_name, temperature, max_tokens, top_p):
-    completion = openai.ChatCompletion.create(
-        engine=model_name,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        top_p=top_p,
-        messages=prompts,
-    )
-    message = completion.choices[0].message.content
-    return message
+    # Handle throttling and other errors
+    try:
+        completion = openai.ChatCompletion.create(
+            engine=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            top_p=top_p,
+            messages=prompts,
+        )
+        message = completion.choices[0].message.content
+        return message
+    except Exception as error:
+        return str(error)
 
 
 def update_prompts(prompts, role, content):
