@@ -41,7 +41,9 @@ def chat_click():
             # Remove the last prompt, which is the user's input
             st.session_state["prompts"].pop()
             # icon avatar style and the bandaid icon
-            message(output.replace(chat_gpt.ERROR_PERFIX, ""), avatar_style="bottts", seed=1)
+            message(
+                output.replace(chat_gpt.ERROR_PERFIX, ""), avatar_style="bottts", seed=1
+            )
         else:
             st.session_state["prompts"] = chat_gpt.update_prompts(
                 st.session_state["prompts"], "assistant", output

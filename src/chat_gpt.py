@@ -2,6 +2,7 @@ import openai
 
 ERROR_PERFIX = "$$ERROR$$: "
 
+
 def setup_openai_api(settings):
     openai.api_type = settings["API_TYPE"] if settings["API_TYPE"] else "azure"
     openai.api_base = settings["API_BASE"]
